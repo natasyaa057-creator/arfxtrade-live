@@ -13,26 +13,53 @@ $port_db = (int)(getenv('DB_PORT') ?: 3306);
 $nama_pengguna_db = getenv('DB_USER') ?: 'root';
 $kata_sandi_db = getenv('DB_PASS') ?: '';
 $nama_database = getenv('DB_NAME') ?: 'db-arfxtrade';
+$ssl_mode_db = getenv('DB_SSL_MODE') ?: '';
 
 // Mode development/production
 if (!defined('ENVIRONMENT')) {
 	define('ENVIRONMENT', getenv('APP_ENV') ?: 'development');
 }
 
+// Hindari mysqli melempar exception fatal di production
+mysqli_report(MYSQLI_REPORT_OFF);
+
 // Membuat koneksi dengan fallback otomatis
 $koneksi = mysqli_init();
 $koneksi->options(MYSQLI_OPT_CONNECT_TIMEOUT, 5);
 
-$host_kandidat = [$host_db, 'localhost']; // coba IPv4 dulu, lalu fallback localhost biasa
+// Jika host dari ENV sudah remote (contoh TiDB Cloud), jangan fallback ke localhost
+$host_kandidat = [$host_db];
+if (in_array($host_db, ['127.0.0.1', 'localhost', '::1'], true)) {
+	$host_kandidat[] = 'localhost';
+}
+
+// Dukungan koneksi SSL untuk DB cloud (TiDB, dsb)
+if ($ssl_mode_db !== '' || stripos($host_db, 'tidbcloud.com') !== false) {
+	// Tidak verifikasi sertifikat server agar koneksi cloud tetap jalan tanpa CA file lokal.
+	// Untuk security lebih tinggi, bisa tambahkan CA cert dan verifikasi penuh.
+	@$koneksi->ssl_set(null, null, null, null, null);
+	@$koneksi->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+}
+
 $terhubung = false;
 $error_koneksi = '';
 
 foreach ($host_kandidat as $host) {
-	if (@$koneksi->real_connect($host, $nama_pengguna_db, $kata_sandi_db, $nama_database, $port_db)) {
-		$terhubung = true;
-		break;
-	} else {
-		$error_koneksi = $koneksi->connect_error;
+	$client_flags = 0;
+	if ($ssl_mode_db !== '' || stripos($host_db, 'tidbcloud.com') !== false) {
+		$client_flags = MYSQLI_CLIENT_SSL;
+		if (defined('MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT')) {
+			$client_flags |= MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+		}
+	}
+	try {
+		if (@$koneksi->real_connect($host, $nama_pengguna_db, $kata_sandi_db, $nama_database, $port_db, null, $client_flags)) {
+			$terhubung = true;
+			break;
+		}
+		$error_koneksi = $koneksi->connect_error ?: 'Koneksi database gagal tanpa detail error.';
+	} catch (Throwable $e) {
+		$error_koneksi = $e->getMessage();
 	}
 }
 
