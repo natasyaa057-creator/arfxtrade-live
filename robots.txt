@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: <?= basis_url('sitemap.xml') ?>
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /database/
+Disallow: /aset/js/
+Disallow: /unggahan/
+
+# Allow important pages
+Allow: /
+Allow: /tentang.php
+Allow: /portofolio.php
+Allow: /edukasi.php
+Allow: /testimoni.php
+
+
+
+
+
+
+
+

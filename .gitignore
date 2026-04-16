@@ -1,0 +1,43 @@
+# Logs
+logs/
+*.log
+
+# Cache
+cache/
+rate_limit/
+
+# Uploads (jika tidak ingin commit file upload)
+unggahan/payment_proof/*
+!unggahan/payment_proof/.htaccess
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup
+backup/*.sql
+backup/*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+
+
+
+
+
+
+
+

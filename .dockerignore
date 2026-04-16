@@ -1,0 +1,12 @@
+.git
+.gitignore
+node_modules
+vendor
+logs
+backup
+*.log
+*.sql
+README*.md
+MEMBERSHIP_SYSTEM_DOCUMENTATION.md
+INSTALASI_MEMBERSHIP.md
+
