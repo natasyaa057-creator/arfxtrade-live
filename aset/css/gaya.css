@@ -1,0 +1,70 @@
+/* Gaya utama ARFXTRADE - tema gelap emas */
+:root {
+	--warna-bg: #0a0a0a;
+	--warna-emas: #d4af37;
+	--warna-teks: #f2f2f2;
+	--warna-teks-2: #cfcfcf;
+}
+
+html, body {
+	background-color: var(--warna-bg);
+	color: var(--warna-teks);
+	font-family: 'Poppins', 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.navbar-dark {
+	background: rgba(10, 10, 10, 0.85) !important;
+	backdrop-filter: saturate(120%) blur(8px);
+}
+
+.teks-emas { color: var(--warna-emas); }
+.bg-emas { background-color: var(--warna-emas); }
+.border-emas { border-color: var(--warna-emas) !important; }
+
+.btn-emas {
+	background: var(--warna-emas);
+	color: #0a0a0a;
+	border: none;
+	transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn-emas:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(212, 175, 55, .35); }
+
+.hero {
+	min-height: 86vh;
+	background: radial-gradient(1200px 800px at 80% -10%, rgba(212,175,55,.18), transparent 60%),
+		linear-gradient(180deg, rgba(212,175,55,.06), transparent 40%),
+		var(--warna-bg);
+}
+
+.kartu-gelap {
+	background: #111;
+	border: 1px solid #1f1f1f;
+	border-radius: 14px;
+	box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+.footer {
+	border-top: 1px solid #1f1f1f;
+	background: #0a0a0a;
+}
+
+.tombol-naik {
+	position: fixed; bottom: 24px; right: 24px; z-index: 1030;
+	background: rgba(212,175,55,.9); color: #0a0a0a;
+	border-radius: 50%; width: 44px; height: 44px;
+	display: grid; place-items: center; box-shadow: 0 8px 24px rgba(212,175,55,.35);
+	opacity: 0; visibility: hidden; transform: translateY(8px);
+	transition: all .25s ease;
+}
+.tombol-naik.muncul { opacity: 1; visibility: visible; transform: translateY(0); }
+
+/* Toggle tema */
+.form-switch .form-check-input { cursor: pointer; border-color: var(--warna-emas); }
+.form-switch .form-check-input:checked { background-color: var(--warna-emas); border-color: var(--warna-emas); }
+
+/* AOS override ringan untuk tema gelap */
+[data-aos] { will-change: transform, opacity; }
+
+
+
+
